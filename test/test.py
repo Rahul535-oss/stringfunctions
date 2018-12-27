@@ -46,6 +46,10 @@ class TestUniversalID(unittest.TestCase):
         self.assertFalse(stringfunctions.contains("Hello World", "wo"))
         self.assertTrue(stringfunctions.contains("Hello World", "wo", True))
 
+    def test_replace_substring(self):
+        self.assertEqual(stringfunctions.replace_substring('c:\\temp', '\\', '/'), "c:/temp")
+        self.assertEqual(stringfunctions.replace_substring('c:/temp/*.*', '/', '\\'), "c:\\temp\\*.*")
+
     def test_doctest(self):
         suite = unittest.TestSuite()
         suite.addTest(doctest.DocTestSuite("stringfunctions"))
@@ -55,6 +59,3 @@ class TestUniversalID(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-    # doctest.testfile('__init__.py')
-    # doctest.testmod()

@@ -1,4 +1,5 @@
-import fnmatch
+import fnmatch  # used by the like function
+import re  # used by the replace_substring function
 
 
 def to_string(value):
@@ -499,47 +500,46 @@ def compare(string1, string2, ignore_case=False):
     return 0
 
 
-# TODO
-def replace(sourceList, fromList, toList, ignore_case=False):
+def replace(source, from_str, to_str, ignore_case=False):
     """
     Performs a find-and-replace operation on a text list.
-Syntax
-@Replace( sourcelist ; fromlist ; tolist )
-Parameters
-sourcelist
-Text list. The list whose values you want to scan.
-fromlist
-Text list. A list containing the values that you want to replace.
-tolist
-Text list. A list containing the replacement values.
-    :param string:
-    :return:
+
+    >>> replace( ['Lemon','Apple','Orange'], 'Apple','Microsoft')
+    ['Lemon', 'Microsoft', 'Orange']
+
     """
-    pass
+
+    return [to_str if entry == from_str else entry for entry in source]
 
 
-# TODO
-def replace_substring(sourceList, fromList, toList, ignore_case=False):
+def replace_substring(source, from_list, to_str, ignore_case=False):
     """
+    Replaces specific words in a string or list with new words
 
     :return:
 
+    >>> replace_substring("Like: I like that you like me", "like", "love")
+    'Like: I love that you love me'
 
-    Replaces specific words or phrases in a string with new words or phrases that you specify. Case sensitive.
-Syntax
-@ReplaceSubstring( sourceList ; fromList ; toList )
-Parameters
-sourceList
-Text or text list. The string whose contents you want to modify.
-fromList
-Text or text list. A list containing the words or phrases that you want to replace.
-toList
-Text or text list. A list containing the replacement words or phrases.
-Return value
-newSourceList
-Text or text list. The sourceList, with any values from fromList replaced by the corresponding value in toList.  If none of the values in fromList matched the values in sourceList, then sourceList is returned unaltered.
+    >>> replace_substring('I want a hIPpo for my birthday', 'hippo', 'giraffe', ignore_case=True)
+    'I want a giraffe for my birthday'
+
+
+    >>> replace_substring(['Hello World', 'a b c'], ' ', '_')
+    ['Hello_World', 'a_b_c']
+
+    >>> replace_substring('Odd_looking&text!', ['_','&'], ' ')
+    'Odd looking text!'
+
     """
-    pass
+    if is_list(source):
+        return [replace_substring(entry, from_list, to_str, ignore_case) for entry in source]
+
+    options = '(?i)' if ignore_case else ''
+
+    for from_str in to_list(from_list):
+        source = re.sub(options + re.escape(from_str), lambda m: to_str, source)
+    return source
 
 
 def diff(list1, list2, ignore_case=False):
