@@ -4,3 +4,4 @@ __pycache__/
 universalid.egg-info/
 build/
 dist/
+docs/_build/
