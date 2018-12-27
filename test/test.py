@@ -4,8 +4,13 @@ import stringfunctions
 
 
 class TestUniversalID(unittest.TestCase):
+    def test_to_list(self):
+        self.assertEqual(stringfunctions.to_list("Hello"), ['Hello'])
+        self.assertEqual(stringfunctions.to_list([]), [])
+
     def test_to_string(self):
         self.assertEqual(stringfunctions.to_string(1), "1")
+        self.assertEqual(stringfunctions.to_string("Hello"), "Hello")
         self.assertEqual(stringfunctions.to_string(None), "None")
         self.assertEqual(stringfunctions.to_string([1, 2, 3]), "[1, 2, 3]")
 
@@ -36,14 +41,21 @@ class TestUniversalID(unittest.TestCase):
         self.assertTrue(stringfunctions.is_empty(""))
         self.assertTrue(stringfunctions.is_empty(None))
 
+    def test_contains(self):
+        self.assertTrue(stringfunctions.contains("Hello World", "Wo"))
+        self.assertFalse(stringfunctions.contains("Hello World", "wo"))
+        self.assertTrue(stringfunctions.contains("Hello World", "wo", True))
+
+    def test_replace_substring(self):
+        self.assertEqual(stringfunctions.replace_substring('c:\\temp', '\\', '/'), "c:/temp")
+        self.assertEqual(stringfunctions.replace_substring('c:/temp/*.*', '/', '\\'), "c:\\temp\\*.*")
+
     def test_doctest(self):
         suite = unittest.TestSuite()
         suite.addTest(doctest.DocTestSuite("stringfunctions"))
         result = unittest.TextTestRunner().run(suite)
         self.assertTrue(result.wasSuccessful())
 
+
 if __name__ == '__main__':
     unittest.main()
-
-    # doctest.testfile('__init__.py')
-    # doctest.testmod()
