@@ -34,12 +34,17 @@ Modify
    str_util.trim
    str_util.propercase
    str_util.lowercase
+   str_util.replace_substring
+
+Extract
+-------
+
+.. autosummary::
    str_util.left
    str_util.left_back
    str_util.right
    str_util.right_back
    str_util.word
-   str_util.replace_substring
 
 List operations
 ---------------

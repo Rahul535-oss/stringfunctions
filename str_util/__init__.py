@@ -3,51 +3,105 @@ import re  # used by the replace_substring function
 
 
 def to_string(value):
+    """
+    Convert a value to a string. Same as ``str(value)``
+
+    :param any value: the value to convert
+    :return: the value converted to a string
+
+    >>> to_string( 5 )
+    '5'
+
+    """
     return str(value)
 
 
 def to_list(value):
+    """
+    Convert a value to a list. Similar to ``list(value)``, but also works on existing lists
+
+    :param any value: the value to convert
+    :return: the value converted to a string
+
+    >>> to_list( "Hello")
+    ['Hello']
+
+    >>> to_list(["Hello"])
+    ['Hello']
+
+    """
     if is_list(value):
         return value
     return [value]
 
 
 def is_string(value):
+    """
+    Tests the value to determine whether it is a string.
+
+    :param any value:
+    :return: True of the value is a string (an instance of the str class)
+
+    >>> is_string( 'Hello' )
+    True
+
+    >>> is_string( ['Hello'] )
+    False
+
+    """
     return isinstance(value, str)
 
 
 def is_list(value):
+    """
+    Tests the value to determine whether it is a list.
+
+    :param any value:
+    :return: True of the value is a list (an instance of the list class)
+
+    >>> is_list( 'Hello' )
+    False
+
+    >>> is_list( ['Hello'] )
+    True
+
+    """
     return isinstance(value, list)
 
 
-def trim(string):
+def trim(value):
     """
     Removes leading, trailing, and redundant spaces/whitespace from a text string, or from each element of a text list.
-    :param str string: text or text list
-    :return: Text or text list. The string, with extra spaces removed.
+
+    :param str,list value: text or text list
+    :return: The value, with extra spaces and empty elements removed.
+    :rtype: str,list
 
     Remove all redundant whitespace from string
     >>> trim('A  B C   ')
     'A B C'
 
     Trim all entries in list and remove empty entries
-    >>> trim(['Hello   ','','   World'])
+    >>> trim(['Hello   ', '  ', '   World'])
     ['Hello', 'World']
 
+    >>> trim( [''])
+    []
 
     """
-    if is_list(string):
-        trimmed = list(map(trim, string))  # trim all entries in list
+    if is_list(value):
+        trimmed = list(map(trim, value))  # trim all entries in list
         return list(filter(lambda entry: entry != '', trimmed))  # remove empty entries
-    return " ".join(string.split())  # trim string
+    return " ".join(value.split())  # trim string
 
 
 def unique(source_list, ignore_case=False):
     """
-    removes duplicate values from a text list.
-    :param list:
-    :return: text list whith unique members
-
+    Removes duplicate values from a list of strings by returning only the first occurrence of each member of the list.
+    :param list source_list: Any text list
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: List with unique members
+    :rtype: list
 
     >>> unique( ['A','B','C','B','A'])
     ['A', 'B', 'C']
@@ -68,9 +122,9 @@ def unique(source_list, ignore_case=False):
     return list(dict.fromkeys(source_list))
 
 
-def is_empty(string):
+def is_empty(value):
     """
-    Return true is string is empty or only contains whitespace
+    Return true is value is empty or only contains whitespace
 
     >>> is_empty( "   " )
     True
@@ -78,55 +132,58 @@ def is_empty(string):
     >>> is_empty( None )
     True
 
+    >>> is_empty(['  '])
+    True
+
     """
-    if string is None:
+    if value is None:
         return True
-    return string.strip() == ''
+    if is_list(value):
+        return trim(value) == []
+    return value.strip() == ''
 
 
-def contains(string, substring, ignore_case=False):
+def contains(value, substrings, ignore_case=False):
     """
     Determine if a string contains any of the substrings
 
-    :param string: (str or list) The string you want to search in
-    :param substring: (str or list) The string(s) you want to search for in string.
-    :param bool ignore_case: Optional, default False. Specify True to perform a case-insensitive search
+    :param value: (str or list) The string you want to search in
+    :param substrings: (str or list) The string(s) you want to search for in string.
+    :param bool ignore_case: Optional. Specify True to perform a case-insensitive search (default False)
 
-    >>> contains( "Hello World", "Wo")
+    >>> contains( "Hello World", "world")
+    False
+
+    >>> contains( "Hello World", "wORLd", True)
     True
 
-    >>> contains( "Hello World", "world", True)
-    True
-
-    >>> contains( "Red Blue Yellow Green", ['Black', 'Red'])
-    True
-
-    >>> contains( "Red Blue Yellow Green", ['Blue', 'red'], True)
-    True
-
-    >>> contains( "Red Blue Yellow Green", ['Rubbish', ''])
+    >>> contains( "Red Blue Yellow Green", ['Black', 'Low'], ignore_case=True)
     True
 
     >>> contains( ['ABC', 'DEF'], ['B'])
     True
 
+    A blank string is always contained
+    >>> contains( "Red Blue Yellow Green", ['Rubbish', ''])
+    True
+
     """
-    if is_list(string):
-        return any([contains(entry, substring, ignore_case) for entry in string])
+    if is_list(value):
+        return any([contains(entry, substrings, ignore_case) for entry in value])
 
-    substrings = to_list(substring)
+    substrings = to_list(substrings)
     if ignore_case:
-        return any([entry.casefold() in string.casefold() for entry in substrings])
-    return any([entry in string for entry in substrings])
+        return any([entry.casefold() in value.casefold() for entry in substrings])
+    return any([entry in value for entry in substrings])
 
 
-def contains_all(string, substring, ignore_case=False):
+def contains_all(value, substrings, ignore_case=False):
     """
     Determine if a string contains all of the substring substrings
 
-    :param string: (str or list) The string you want to search in
-    :param substring: (str or list) The string(s) you want to search for in string.
-    :param bool ignore_case: Optional, default False. Specify True to perform a case-insensitive search
+    :param value: (str or list) The string you want to search in
+    :param substrings: (str or list) The string(s) you want to search for in string.
+    :param bool ignore_case: Optional. Specify True to perform a case-insensitive search (default False)
 
     >>> contains_all( "Hello World", "Wo")
     True
@@ -137,26 +194,33 @@ def contains_all(string, substring, ignore_case=False):
     >>> contains_all( "Red Blue Yellow Green", ['Black', 'Red'])
     False
 
-    >>> contains_all( "Red Blue Yellow Green", ['Blue', 'red'], True)
+    >>> contains_all( "Red Blue Yellow Green", ['LUE', 'red'], True)
+    True
+
+    >>> contains_all( ["Red Blue", "Yellow Green"], ['Blue', 'red'], True)
     True
 
     """
-    if is_list(string):
-        return any([contains_all(entry, substring, ignore_case) for entry in string])
+    if is_list(value):
+        return any([contains_all(entry, substrings, ignore_case) for entry in value])
 
-    substrings = to_list(substring)
+    substrings = to_list(substrings)
     if ignore_case:
-        return all([entry.casefold() in string.casefold() for entry in substrings])
-    return all([entry in string for entry in substrings])
+        return all([entry.casefold() in value.casefold() for entry in substrings])
+    return all([entry in value for entry in substrings])
 
 
-def index_of(string, substring, ignore_case=False, reverse=False):
+def index_of(value, substring, ignore_case=False, reverse=False):
     """
+    Find the first occurrence of the substring and return the position, If not found, return 0
     First character in the string has position = 1
 
-    :param string:
-    :param substring:
-    :return:
+    :param str,list value: the source to search in
+    :param str substring: the substring to search for in the source value
+    :param bool ignore_case: Optional. Specify True to perform a case-insensitive search (default False)
+    :param bool reverse: Optional. Specify True to search backwards (default False)
+    :return: Position of the first occurrence of the substring in the string. Returns 0 if not found
+    :rtype: str,list
 
     >>> index_of( 'Jakob','a')
     2
@@ -178,43 +242,70 @@ def index_of(string, substring, ignore_case=False, reverse=False):
     >>> index_of( "This is key: FIS", "is", reverse=True, ignore_case=True)
     15
 
-
     """
-    if is_list(string):
-        return [index_of(entry, substring, ignore_case) for entry in string]
+    if is_list(value):
+        return [index_of(entry, substring, ignore_case) for entry in value]
     if ignore_case:
-        string = string.casefold()
+        value = value.casefold()
         substring = substring.casefold()
     if reverse:
-        return string.rfind(substring) + 1
-    return string.find(substring) + 1
+        return value.rfind(substring) + 1
+    return value.find(substring) + 1
 
 
 def implode(strings, separator=''):
     """
     Concatenate all member of a list into a single string by a separating delimiter.
+    Similar to ``separator.join(strings)`` but doesn't treat a single string as a list
+
+    :param list strings: strings to concatenate
+    :param str separator: Optional. The delimiter (default='')
+    :return: String
+
+    >>> implode( ['a','b','c'])
+    'abc'
+
+    >>> implode( ['Hello','World'], ' ')
+    'Hello World'
+
+    >>> implode( 'Hi', '.' )
+    'Hi'
     """
-    return separator.join(strings)
+    if is_list(strings):
+        return separator.join(strings)
+    return strings
 
 
-def propercase(string):
+def propercase(value):
     """
     Converts the words in a string to proper­name capitalization: the first letter of each word becomes uppercase,
     the rest become lowercase.
 
+    :param str,list value: The string you want to convert.
+
     >>> propercase('hELLO wORLD')
     'Hello World'
 
+    >>> propercase(['blue','RED','very grEEn'])
+    ['Blue', 'Red', 'Very Green']
+
     """
-    return implode([entry.capitalize() for entry in string.split()], ' ')
+    if is_list(value):
+        return [propercase(entry) for entry in value]
+    return implode([entry.capitalize() for entry in value.split()], ' ')
 
 
+# TODO
 def left(string, find, ignore_case=False):
     """
+    Searches a string from left to right and returns the leftmost characters of the string.
 
-    :param str string: The string where you want to find the leftmost characters.
-    :param str find: a substring to search for. Left return all character to the left of *find*
-    :param int find: number of chars to return
+    :param str,list string: The string where you want to find the leftmost characters.
+    :param str,int find: * [str] a substring to search for.
+      Function returns all characters to the left of *find*
+      * [int] number of chars to return
+
+    :param bool ignore_case:
     :return: the leftmost characters of string
     :rtype: str
 
@@ -226,7 +317,6 @@ def left(string, find, ignore_case=False):
 
     >>> left( "Hello World", -3 )
     'Hello Wo'
-
 
     >>> left( "Happy Birthday", "XYZ")
     ''
@@ -486,6 +576,9 @@ def compare(string1, string2, ignore_case=False):
     >>> compare( "Jakob", "jakob")
     -1
 
+    >>> compare( 'Banana','Apple')
+    1
+
     >>> compare( "Jakob", "jakob", ignore_case=True)
     0
 
@@ -495,7 +588,7 @@ def compare(string1, string2, ignore_case=False):
         string2 = lowercase(string2)
     if string1 < string2:
         return -1
-    if string2 > string1:
+    if string1 > string2:
         return 1
     return 0
 
@@ -636,9 +729,11 @@ def sort(source_list, ignore_case=False):
 
 
     """
-    if ignore_case:
-        source_list.sort(key=lambda s: s.casefold())
-    else:
-        source_list.sort()
+    sorted_list = source_list.copy()
 
-    return source_list
+    if ignore_case:
+        sorted_list.sort(key=lambda s: s.casefold())
+    else:
+        sorted_list.sort()
+
+    return sorted_list

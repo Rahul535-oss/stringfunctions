@@ -3,7 +3,21 @@ import doctest
 import str_util
 
 
-class TestUniversalID(unittest.TestCase):
+class TestStrUtil(unittest.TestCase):
+    def test_side_effects(self):
+        list = ['B', 'A', 'C', 'C', '']
+        length = len(list)
+        new_list = str_util.trim(list)
+        new_list = str_util.sort(list)
+        new_list = str_util.unique(list)
+        new_list = str_util.unique(list, True)
+        new_list = str_util.lowercase(list)
+        new_list = str_util.replace(list, 'A', 'Abe')
+        new_list = str_util.replace_substring(list, 'A', 'Abe')
+
+        self.assertEqual(len(list), length)  # Original list has the same length
+        self.assertEqual(['B', 'A', 'C', 'C', ''], list)
+
     def test_to_list(self):
         self.assertEqual(str_util.to_list("Hello"), ['Hello'])
         self.assertEqual(str_util.to_list([]), [])
