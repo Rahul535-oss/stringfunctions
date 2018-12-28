@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'stringfunctions'
+project = 'str_util'
 copyright = '2018, Jakob Majkilde'
 author = 'Jakob Majkilde'
 
@@ -105,7 +105,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'stringfunctionsdoc'
+htmlhelp_basename = 'str_utildoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -132,7 +132,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'stringfunctions.tex', 'stringfunctions Documentation',
+    (master_doc, 'str_util.tex', 'str_util Documentation',
      'Jakob Majkilde', 'manual'),
 ]
 
@@ -142,7 +142,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'stringfunctions', 'stringfunctions Documentation',
+    (master_doc, 'str_util', 'str_util Documentation',
      [author], 1)
 ]
 
@@ -153,8 +153,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'stringfunctions', 'stringfunctions Documentation',
-     author, 'stringfunctions', 'One line description of project.',
+    (master_doc, 'str_util', 'str_util Documentation',
+     author, 'str_util', 'One line description of project.',
      'Miscellaneous'),
 ]
 

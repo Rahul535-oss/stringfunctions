@@ -1,4 +1,4 @@
-stringfunctions
+str_util
 ===============
 
 

@@ -2,5 +2,5 @@ Functions
 =========
 
 
-.. automodule:: stringfunctions
+.. automodule:: str_util
    :members:
