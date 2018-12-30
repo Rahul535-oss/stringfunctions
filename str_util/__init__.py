@@ -295,132 +295,158 @@ def propercase(value):
     return implode([entry.capitalize() for entry in value.split()], ' ')
 
 
-# TODO
-def left(string, find, ignore_case=False):
+def left(value, find, ignore_case=False):
     """
     Searches a string from left to right and returns the leftmost characters of the string.
 
-    :param str,list string: The string where you want to find the leftmost characters.
-    :param str,int find: * [str] a substring to search for.
-      Function returns all characters to the left of *find*
-      * [int] number of chars to return
+    :type value: str or list
+    :param value: The string where you want to find the leftmost characters.
+    :type find: str or int
+    :param find:
+        * [str] a substring to search for.
+          Function returns all characters to the left of *find*
+        * [int] number of leftmost chars to return.
 
-    :param bool ignore_case:
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the leftmost characters of string
-    :rtype: str
+    :rtype: str or list
+
+    Return the first two characters
 
     >>> left( "Hello World", 2 )
     'He'
 
+    If number if greater then the length of the string, then the whole string is returned
+
     >>> left( "Hello", 10 )
     'Hello'
+
+    Use a negative number to count from the back, just like the :func:`~left_back` function
 
     >>> left( "Hello World", -3 )
     'Hello Wo'
 
+    If the *find* string is not found, then an empty string is returned
+
     >>> left( "Happy Birthday", "XYZ")
     ''
 
+    Return everything until the letter 'l'
+
     >>> left( "Hello World", "l")
     'He'
+
+    Also works on list's
 
     >>> left( ["Jakob","Majkilde"], 2)
     ['Ja', 'Ma']
 
     """
-    if is_list(string):
-        return [left(entry, find) for entry in string]
+    if is_list(value):
+        return [left(entry, find) for entry in value]
 
     if isinstance(find, int):
         if find > 0:
-            return string[:find]
-        return string[:find]
+            return value[:find]
+        return value[:find]
 
-    pos = index_of(string, find, ignore_case)
+    pos = index_of(value, find, ignore_case)
     if pos > 0:
-        return left(string, pos - 1)
+        return left(value, pos - 1)
     return ""
 
 
-def left_back(string, find, ignore_case=False):
+def left_back(value, find, ignore_case=False):
     """
-    As :func: left: but counts/searches from the back
+    As :func:`~left` but counts/searches from the back
 
-    :param str string: The string where you want to find the leftmost characters.
-    :param str find: a substring to search for. Left return all character to the left of *find*
-    :param int find: number of chars to return
+    :type value: str or list
+    :param value: The string where you want to find the leftmost characters.
+    :type find: str or int
+    :param find:
+        * [str] a substring to search for. Left return all character to the left of *find*
+        * [int] return the leftmost characters from the string, skipping the *find* leftmost
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the leftmost characters of string
-    :rtype: str
+    :rtype: str or list
+
+    Skip the last 3 characters
 
     >>> left_back( "Hello World", 3 )
     'Hello Wo'
 
+    If *count* is greater than the length of the string, then return an empty string
+
     >>> left_back( "Hello", 10 )
-    'Hello'
+    ''
+
+    if *count* is negative, then return the whole string
 
     >>> left_back( "Hello World", -2 )
     'Hello World'
 
+    return an empty string if the search string is not found
 
     >>> left_back( "Happy Birthday", "XYZ")
     ''
 
+    Return leftmost characters until the last occurrence of the letter 'l'
+
     >>> left_back( "Hello World", "l")
     'Hello Wor'
 
-    >>> left_back( ["Jakob","Majkilde"], 2)
-    ['Jak', 'Majkil']
-
     """
-    if is_list(string):
-        return [left_back(entry, find) for entry in string]
+    if is_list(value):
+        return [left_back(entry, find) for entry in value]
 
     if isinstance(find, int):
         if find > 0:
-            if find > len(string):
-                return string
-            return string[:len(string) - find]
-        return string
-    pos = index_of(string, find, ignore_case, reverse=True)
+            if find > len(value):
+                return ''
+            return value[:len(value) - find]
+        return value
+    pos = index_of(value, find, ignore_case, reverse=True)
     if pos > 0:
-        return left(string, pos - 1)
+        return left(value, pos - 1)
     return ""
 
 
-def is_member(value, list, ignore_case=False):
+def is_member(source_list, search_list, ignore_case=False):
     """
+    Check if the source_list is a subset of the search_list
 
-    :param value:
-    :param list:
-    :param ignore_case:
-    :return:
+    :type source_list: list or str
+    :param source_list:
+    :type search_list: list or str
+    :param search_list:
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: True if all members of the source_list can be found in the search_list
 
 
     >>> is_member('Admin', ['Owner', 'Admin', 'Reader'])
     True
 
-    >>> is_member('admin', ['Owner', 'Admin', 'Reader'])
-    False
-
     >>> is_member( ['Jakob','Maiken'], ['Maiken','Amalie','Jakob','Ida'])
     True
 
-    >>> is_member('admin', ['Owner', 'Admin', 'Reader'], ignore_case=True)
-    True
-
     """
-    if is_list(value):
-        return all([is_member(entry, list, ignore_case) for entry in value])
+    search_list = to_list(search_list)
+    if is_list(source_list):
+        return all([is_member(entry, search_list, ignore_case) for entry in source_list])
     if ignore_case:
-        return is_member(lowercase(value), lowercase(list))
-    return value in list
+        return is_member(lowercase(source_list), lowercase(search_list))
+    return source_list in search_list
 
 
 def lowercase(value):
     """
+    Converts a string or list of strings to lowercase.
+    Like the `casefold <https://www.programiz.com/python-programming/methods/string/casefold>`_ function, but also works on lists.
 
-    :param value:
-    :return:
+    :type value: str or list
+    :param value: the string to convert to lowercase
+    :return: the source string converted to lowercase
+    :rtype: str or list
 
     >>> lowercase("Der Fluß")
     'der fluss'
@@ -434,131 +460,174 @@ def lowercase(value):
     return value.casefold()
 
 
-def right(string, find, ignore_case=False):
+def right(value, find, ignore_case=False):
     """
+    Searches a string from left to right and returns the rightmost characters of the string.
 
-    :param str string: The string where you want to find the rightmost characters.
-    :param str find: a substring to search for. Left return all characters to the right of *find*
-    :param int find: skip first 'find' characters and return the rest
+    :type value: str or list
+    :param value: The string where you want to find the rightmost characters.
+    :type find: str or int
+    :param find:
+        * [str] a substring to search for.
+          Function returns all characters to the right of *find*
+        * [int] skip the first *count* characters and returns the rest.
+
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the rightmost characters of string
-    :rtype: str
+    :rtype: str or list
+
+    Skip the first three characters and return the rest
 
     >>> right( "Hello World", 3 )
     'lo World'
 
+    If *count* is greater then the length of the string, then return a blank
+
     >>> right( "Hello", 10 )
-    'Hello'
+    ''
+
+    If *count* is negative the count from the back - just like :func:`right_back`
 
     >>> right( "Hello World", -2 )
     'ld'
 
-
+    if the search string is not found, a blank is returned
     >>> right( "Happy Birthday", "XYZ")
     ''
+
+    Return all characters to the right of the first occurrence of the letter 'l'
 
     >>> right( "Hello World", "l")
     'lo World'
 
-    >>> right( ["Jakob","Majkilde"], 2)
-    ['kob', 'jkilde']
+    Also works on list's
 
     >>> right( ["Jakob","Majkilde"], 'j')
     ['', 'kilde']
 
     """
-    if is_list(string):
-        return [right(entry, find) for entry in string]
+    if is_list(value):
+        return [right(entry, find) for entry in value]
 
     if isinstance(find, int):
-        if find > len(string):
-            return string
+        if find > len(value):
+            return ''
         if find > 0:
-            return string[find:]
-        return string[find:]
-    pos = index_of(string, find, ignore_case)
+            return value[find:]
+        return value[find:]
+    pos = index_of(value, find, ignore_case)
     if pos > 0:
-        return right(string, pos + len(find) - 1)
+        return right(value, pos + len(find) - 1)
     return ""
 
 
-def right_back(string, find, ignore_case=False):
+def right_back(value, find, ignore_case=False):
     """
+    Searches a string from the back (right to left) and returns the rightmost characters.
 
-    :param str string: The string where you want to find the rightmost characters.
-    :param str find: a substring to search for. Left return all characters to the right of *find*
-    :param int find: skip first 'find' characters and return the rest
+    :type value: str or list
+    :param value: The string where you want to find the rightmost characters.
+    :type find: str or int
+    :param find:
+        * [str] a substring to search for.
+          Function returns all characters to the right of the last occurrence of *find*
+        * [int] return the *count* characters of the string.
+
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the rightmost characters of string
-    :rtype: str
+    :rtype: str or list
+
+
+    Return the last 3 characters of the string
 
     >>> right_back( "Hello World", 3 )
     'rld'
 
+    If *count* is greater than the length of the return, then the whole string is returned
+
     >>> right_back( "Hello", 10 )
     'Hello'
+
+    if *count* is negative, then return an empty string
 
     >>> right_back( "Hello World", -2 )
     'Hello World'
 
 
-    >>> right_back( "Happy Birthday", "XYZ")
-    ''
+    Return everything to the right of the last occurrence of the letter 'l'
 
     >>> right_back( "Hello World", "l")
     'd'
+
+    Also works on list's
 
     >>> right_back( ["Jakob","Majkilde"], 2)
     ['ob', 'de']
 
 
     """
-    if is_list(string):
-        return [right_back(entry, find) for entry in string]
+    if is_list(value):
+        return [right_back(entry, find) for entry in value]
 
     if isinstance(find, int):
-        if find > len(string):
-            return string
+        if find > len(value):
+            return value
         if find > 0:
-            return string[-find:]
-        return string
-    pos = index_of(string, find, ignore_case, reverse=True)
+            return value[-find:]
+        return value
+    pos = index_of(value, find, ignore_case, reverse=True)
     if pos > 0:
-        return right(string, pos + len(find) - 1)
+        return right(value, pos + len(find) - 1)
     return ""
 
 
-def word(string, number, separator=None):
+def word(value, number, separator=None):
     """
+    Returns a specified word from a text string. Words are by default separated by whitespace.
+    First word in a sentence is number 1
 
-    :param string:
-    :param separator:
-    :param number:
-    :return:
+    :type value: str or list
+    :param value: the sentence to be scanned
+    :param number:  A position indicating which word you want returned from string. 1 is the first word in the sentence
+    and -1 is the last word
+    :param separator: Optional (default is any whitespace)
+    :return: the selected word
+    :rtype: str or list
+
+
+    Get the second word in a sentence
 
     >>> word( "Some text here", 2)
     'text'
 
+    Get the fifth word in a senctence with only three words
+
     >>> word( "Some text here", 5)
     ''
 
-    >>> word( "Some text here", -1)
-    'here'
+    Return the last word from a sentence, e.g. the lastname of the username
+
+    >>> word( "Jakob Majkilde", -1)
+    'Majkilde'
+
+    Get the second word in a sentence, using a custom separator
 
     >>> word( "North, West, East", 2, ", ")
     'West'
 
+    Also works on list's
+
     >>> word( ["North, West, East", 'Scandinavia, UK, China'], 2, ", ")
     ['West', 'UK']
 
-
-
     """
-    if is_list(string):
-        return [word(entry, number, separator) for entry in string]
-    list = string.split(separator)
+    if is_list(value):
+        return [word(entry, number, separator) for entry in value]
+    tokens = value.split(separator)
     index = number - 1 if number > 0 else number
-    if index > len(list):
+    if index > len(tokens):
         return ''
-    return list[index]
+    return tokens[index]
 
 
 def compare(string1, string2, ignore_case=False):

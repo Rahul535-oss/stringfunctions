@@ -1,13 +1,9 @@
 .. str_util documentation master file, created by
-   sphinx-quickstart on Fri Dec 28 11:25:41 2018.
+   sphinx-quickstart on Thu Dec 27 14:30:40 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 .. include:: ../README.rst
-
-Functions
-=========
-
 
 Conversion
 ----------
@@ -18,7 +14,7 @@ Conversion
    str_util.implode
 
 Assertion
----------
+----------
 
 .. autosummary::
    str_util.is_string
@@ -63,15 +59,8 @@ List operations
    str_util.intersection
    str_util.sort
 
-
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :hidden:
+    :glob:
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    *
