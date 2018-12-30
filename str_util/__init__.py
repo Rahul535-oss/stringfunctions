@@ -99,7 +99,7 @@ def unique(source_list, ignore_case=False):
     """
     Removes duplicate values from a list of strings by returning only the first occurrence of each member of the list.
     :param list source_list: Any text list
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: List with unique members
     :rtype: list
 
@@ -212,45 +212,50 @@ def contains_all(value, substrings, ignore_case=False):
 
 def index_of(value, substring, ignore_case=False, reverse=False):
     """
-    Find the first occurrence of the substring and return the position, If not found, return 0
-    First character in the string has position = 1
+    Find the first occurrence of the substring and return the position, If not found, return -1
+    First character in the string(first element in list has position = 0
 
     :param str,list value: the source to search in
     :param str substring: the substring to search for in the source value
     :param bool ignore_case: Optional. Specify True to perform a case-insensitive search (default False)
     :param bool reverse: Optional. Specify True to search backwards (default False)
-    :return: Position of the first occurrence of the substring in the string. Returns 0 if not found
+    :return: Position of the first occurrence of the substring in the string or list. Returns 0 if not found
     :rtype: str,list
 
     >>> index_of( 'Jakob','a')
-    2
+    1
 
     >>> index_of( 'Jakob','K')
-    0
+    -1
 
     >>> index_of( 'Jakob','K', ignore_case=True)
-    3
+    2
 
-    >>> index_of( ['Red', 'Green','Blue'], 'e')
-    [2, 3, 4]
+    >>> index_of( ['Red', 'Green','Blue'], 'green', ignore_case=True)
+    1
 
     >>> index_of( "This is key: FIS", "is", reverse=True)
-    6
+    5
+
     >>> index_of( "This is key: FIS", "is")
-    3
+    2
 
     >>> index_of( "This is key: FIS", "is", reverse=True, ignore_case=True)
-    15
+    14
 
     """
     if is_list(value):
-        return [index_of(entry, substring, ignore_case) for entry in value]
+        for i, entry in enumerate(value):
+            if is_equal(entry, substring, ignore_case):
+                return i
+        return -1
+
     if ignore_case:
         value = value.casefold()
         substring = substring.casefold()
     if reverse:
-        return value.rfind(substring) + 1
-    return value.find(substring) + 1
+        return value.rfind(substring)
+    return value.find(substring)
 
 
 def implode(strings, separator=''):
@@ -307,7 +312,7 @@ def left(value, find, ignore_case=False):
           Function returns all characters to the left of *find*
         * [int] number of leftmost chars to return.
 
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the leftmost characters of string
     :rtype: str or list
 
@@ -352,7 +357,7 @@ def left(value, find, ignore_case=False):
 
     pos = index_of(value, find, ignore_case)
     if pos > 0:
-        return left(value, pos - 1)
+        return left(value, pos)
     return ""
 
 
@@ -366,7 +371,7 @@ def left_back(value, find, ignore_case=False):
     :param find:
         * [str] a substring to search for. Left return all character to the left of *find*
         * [int] return the leftmost characters from the string, skipping the *find* leftmost
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the leftmost characters of string
     :rtype: str or list
 
@@ -406,8 +411,8 @@ def left_back(value, find, ignore_case=False):
             return value[:len(value) - find]
         return value
     pos = index_of(value, find, ignore_case, reverse=True)
-    if pos > 0:
-        return left(value, pos - 1)
+    if pos >= 0:
+        return left(value, pos)
     return ""
 
 
@@ -419,7 +424,7 @@ def is_member(source_list, search_list, ignore_case=False):
     :param source_list:
     :type search_list: list or str
     :param search_list:
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: True if all members of the source_list can be found in the search_list
 
 
@@ -472,7 +477,7 @@ def right(value, find, ignore_case=False):
           Function returns all characters to the right of *find*
         * [int] skip the first *count* characters and returns the rest.
 
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the rightmost characters of string
     :rtype: str or list
 
@@ -516,8 +521,8 @@ def right(value, find, ignore_case=False):
             return value[find:]
         return value[find:]
     pos = index_of(value, find, ignore_case)
-    if pos > 0:
-        return right(value, pos + len(find) - 1)
+    if pos >= 0:
+        return right(value, pos + len(find))
     return ""
 
 
@@ -533,7 +538,7 @@ def right_back(value, find, ignore_case=False):
           Function returns all characters to the right of the last occurrence of *find*
         * [int] return the *count* characters of the string.
 
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: the rightmost characters of string
     :rtype: str or list
 
@@ -576,8 +581,8 @@ def right_back(value, find, ignore_case=False):
             return value[-find:]
         return value
     pos = index_of(value, find, ignore_case, reverse=True)
-    if pos > 0:
-        return right(value, pos + len(find) - 1)
+    if pos >= 0:
+        return right(value, pos + len(find))
     return ""
 
 
@@ -589,7 +594,7 @@ def word(value, number, separator=None):
     :type value: str or list
     :param value: the sentence to be scanned
     :param number:  A position indicating which word you want returned from string. 1 is the first word in the sentence
-    and -1 is the last word
+        and -1 is the last word
     :param separator: Optional (default is any whitespace)
     :return: the selected word
     :rtype: str or list
@@ -638,7 +643,7 @@ def is_equal(value1, value2, ignore_case=False):
     :param value1: first list
     :type value2: list or str
     :param value2: second list
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
 
     :return: true if the two values is equal
     :rtype: bool
@@ -673,7 +678,7 @@ def compare(string1, string2, ignore_case=False):
 
     :param str string1: first string
     :param str string2: second string
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return:
         * string1 is less than string2: return	  -1
         * string1 equals string2: return	   0
@@ -702,6 +707,67 @@ def compare(string1, string2, ignore_case=False):
     return 0
 
 
+def _replace_str(string, fromlist, tolist, ignore_case=False):
+    """
+    if string is found in fromlist then replace with the corresponding value in tolist
+
+    :param string: the source string to be replaced
+    :param fromlist: the list to search in
+    :param tolist: the list of strings to replace with
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: replaced value
+    :rtype: str
+
+    >>> _replace_str( 'HELLO', ['Hej', 'Hi', 'Hello'], ['Greeting'], ignore_case=True)
+    'Greeting'
+
+    >>> _replace_str( 'Apple', 'Microsoft', 'IBM')
+    'Apple'
+
+    >>> _replace_str( 'Apple', 'Apple', 'IBM')
+    'IBM'
+
+
+    """
+    fromlist = to_list(fromlist)
+    tolist = to_list(tolist)
+    idx = index_of(fromlist, string, ignore_case)
+    if idx >= 0:
+        if idx >= len(tolist):
+            return tolist[-1]
+        return tolist[idx]
+    return string
+
+
+def replace(source, fromlist, tolist, ignore_case=False):
+    """
+    Performs a search-and-replace operation on a list.
+
+    :type source: list or str
+    :param source: The list whose values you want to replace
+    :type fromlist: list or str
+    :param fromlist: Values to search for
+    :type tolist: list or str
+    :param tolist: Values to replace with
+
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: new list with replaced values
+    :rtype: list
+
+    Replace Apple with Microsoft
+
+    >>> replace( ['Lemon','Apple','Orange'], 'Apple','Microsoft')
+    ['Lemon', 'Microsoft', 'Orange']
+
+    >>> replace( ['red', 'yellow', 'green', 'blue'], ['red', 'green', 'blue'], ['purple', 'silver'] )
+    ['purple', 'yellow', 'silver', 'silver']
+
+    """
+    source = to_list(source)
+
+    return [_replace_str(entry, fromlist, tolist, ignore_case) for entry in source]
+
+
 def _make_equal_length(list1, list2):
     """
     Returns two new lists, where len(list1)=length(list2)
@@ -714,6 +780,9 @@ def _make_equal_length(list1, list2):
 
     >>> _make_equal_length( 'string', ['value1', 'value2'])
     (['string', 'string'], ['value1', 'value2'])
+
+    >>> _make_equal_length(['_','&'], ' ')
+    (['_', '&'], [' ', ' '])
     """
     list1 = to_list(list1)
     list2 = to_list(list2)
@@ -722,44 +791,24 @@ def _make_equal_length(list1, list2):
         list1.append(list1[-1])
 
     while len(list2) < len(list1):
-        list2.append(list1[-1])
+        list2.append(list2[-1])
 
     return list1, list2
 
 
-def replace(source, from_str, to_str, ignore_case=False):
-    """
-    Performs a search-and-replace operation on a list.
-
-    :type source: list or str
-    :param source: The list whose values you want to replace
-    :param str from_str: Value to search for
-    :param str to_str: Value to replace with
-
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
-    :return: new list with replaced values
-    :rtype: list
-
-    Replace Apple with Microsoft
-
-    >>> replace( ['Lemon','Apple','Orange'], 'Apple','Microsoft')
-    ['Lemon', 'Microsoft', 'Orange']
-
-    >>> replace( ['red','yellow','blue', 'Yellow'], 'YELLOW', 'green', ignore_case=True)
-    ['red', 'green', 'blue', 'green']
-
-    """
-    source = to_list(source)
-
-    return [to_str if is_equal(entry, from_str, ignore_case) else entry for entry in source]
-
-
-# TODO
-def replace_substring(source, from_list, to_str, ignore_case=False):
+def replace_substring(source, fromlist, tolist, ignore_case=False):
     """
     Replaces specific words in a string or list with new words
 
-    :return:
+    :type source: list or str
+    :param source: Source to be updated with new words
+    :type fromlist: list or str
+    :param fromlist: Values to search for
+    :type tolist: list or str
+    :param tolist: Values to replace with
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: string/list where all value in *fromlist* is replaced with the corresponding values in *tolist*
+    :rtype: list or str
 
     >>> replace_substring("Like: I like that you like me", "like", "love")
     'Like: I love that you love me'
@@ -767,21 +816,29 @@ def replace_substring(source, from_list, to_str, ignore_case=False):
     >>> replace_substring('I want a hIPpo for my birthday', 'hippo', 'giraffe', ignore_case=True)
     'I want a giraffe for my birthday'
 
-
     >>> replace_substring(['Hello World', 'a b c'], ' ', '_')
     ['Hello_World', 'a_b_c']
 
     >>> replace_substring('Odd_looking&text!', ['_','&'], ' ')
     'Odd looking text!'
 
+    >>> replace_substring('Encode: &', [' ','&'], ['%20','&amp;'])
+    'Encode:%20&amp;'
+
+    >>> replace_substring( "I like apples", ["like", "apples"], ["hate", "peaches"])
+    'I hate peaches'
+
+
     """
     if is_list(source):
-        return [replace_substring(entry, from_list, to_str, ignore_case) for entry in source]
+        return [replace_substring(entry, fromlist, tolist, ignore_case) for entry in source]
+
+    fromlist, tolist = _make_equal_length(fromlist, tolist)
 
     options = '(?i)' if ignore_case else ''
 
-    for from_str in to_list(from_list):
-        source = re.sub(options + re.escape(from_str), lambda m: to_str, source)
+    for i,from_str in enumerate(fromlist):
+        source = re.sub(options + re.escape(from_str), lambda m: tolist[i], source)
     return source
 
 
@@ -793,7 +850,7 @@ def diff(list1, list2, ignore_case=False):
     :param list1: first list
     :type list2: list or str
     :param list2: second list
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
 
     :return: copy of list1 without the elements found in list2
     :rtype: list
@@ -845,7 +902,7 @@ def intersection(list1, list2, ignore_case=False):
     :param list1: first list
     :type list2: list or str
     :param list2: second list
-    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
     :return: list with common elements
     :rtype: list
 
@@ -864,15 +921,17 @@ def intersection(list1, list2, ignore_case=False):
     return [entry for entry in list1 if is_member(entry, list2, ignore_case)]
 
 
-# TODO
-# https://docs.python.org/3/library/fnmatch.html
 def like(string, pattern, ignore_case=False):
     """
+    Matches a string with a pattern
 
-    :param string:
-    :param pattern:
-    :param ignore_case:
-    :return:
+    :param str string: the value to be tested
+    :param str pattern: the pattern. Use ? for any char or * for any sentence.
+        More info: `fnmatch <https://docs.python.org/3/library/fnmatch.html>`_
+
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: True if the *pattern* matches the *string*
+    :rtype: bool
 
     >>> like( 'Jakob', 'jakob')
     False
@@ -891,12 +950,14 @@ def like(string, pattern, ignore_case=False):
     return fnmatch.fnmatchcase(string, pattern)
 
 
-# TODO
-def sort(source_list, ignore_case=False):
+def sort(source_list, ignore_case=False, reverse=False):
     """
 
-    :param list source_list:
-    :return:
+    :param list source_list: The list to sort
+    :param bool ignore_case: Optional. Specify true to ignore case (Default False)
+    :param bool reverse: Optional. Specify True to sort the list in descending order (Default False)
+    :return: The sorted list
+    :rtype: list
 
     >>> sort( ['Bad','bored','abe','After'])
     ['After', 'Bad', 'abe', 'bored']
@@ -909,8 +970,8 @@ def sort(source_list, ignore_case=False):
     sorted_list = source_list.copy()
 
     if ignore_case:
-        sorted_list.sort(key=lambda s: s.casefold())
+        sorted_list.sort(key=lambda s: s.casefold(), reverse=reverse)
     else:
-        sorted_list.sort()
+        sorted_list.sort(reverse=reverse)
 
     return sorted_list
