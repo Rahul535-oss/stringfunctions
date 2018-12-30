@@ -1,6 +1,8 @@
 import fnmatch  # used by the like function
 import re  # used by the replace_substring function
 
+name = "str_util"
+
 
 def to_string(value):
     """
@@ -837,7 +839,7 @@ def replace_substring(source, fromlist, tolist, ignore_case=False):
 
     options = '(?i)' if ignore_case else ''
 
-    for i,from_str in enumerate(fromlist):
+    for i, from_str in enumerate(fromlist):
         source = re.sub(options + re.escape(from_str), lambda m: tolist[i], source)
     return source
 

@@ -5,9 +5,9 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="str_util",
-    version="0.1.0",
+    version="0.1.2",
     author="Jakob Majkilde",
-    author_email="jakob@mjakilde.dk",
+    author_email="jakob@majkilde.dk",
     description="String functions for Python 3",
     long_description=long_description,
     url="https://github.com/majkilde/str_util.git",
