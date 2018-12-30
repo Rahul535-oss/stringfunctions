@@ -630,6 +630,43 @@ def word(value, number, separator=None):
     return tokens[index]
 
 
+def is_equal(value1, value2, ignore_case=False):
+    """
+    Compare two values and returns trues if they are equal
+
+    :type value1: list or str
+    :param value1: first list
+    :type value2: list or str
+    :param value2: second list
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+
+    :return: true if the two values is equal
+    :rtype: bool
+
+
+    Match with ignore case
+
+    >>> is_equal("Der Fluß", "DER fluss", ignore_case=True )
+    True
+
+    List in random order is still euqal
+
+    >>> is_equal(['a','b','c'], ['c','b','a'])
+    True
+
+    Both list must contain all elements
+
+    >>> is_equal(['b','c'], ['c','b','a'])
+    False
+
+
+    """
+    list1 = to_list(value1)
+    list2 = to_list(value2)
+    cmp = intersection(list1, list2, ignore_case)
+    return len(cmp) == len(list1) == len(list2)
+
+
 def compare(string1, string2, ignore_case=False):
     """
     Compares two strings
@@ -665,6 +702,7 @@ def compare(string1, string2, ignore_case=False):
     return 0
 
 
+# TODO
 def replace(source, from_str, to_str, ignore_case=False):
     """
     Performs a find-and-replace operation on a text list.
@@ -677,6 +715,7 @@ def replace(source, from_str, to_str, ignore_case=False):
     return [to_str if entry == from_str else entry for entry in source]
 
 
+# TODO
 def replace_substring(source, from_list, to_str, ignore_case=False):
     """
     Replaces specific words in a string or list with new words
@@ -709,58 +748,84 @@ def replace_substring(source, from_list, to_str, ignore_case=False):
 
 def diff(list1, list2, ignore_case=False):
     """
-    Remove elements on list2 from list1
+    Remove elements in list2 from list1
 
-    :param list1:
-    :param list2:
-    :return:
+    :type list1: list or str
+    :param list1: first list
+    :type list2: list or str
+    :param list2: second list
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+
+    :return: copy of list1 without the elements found in list2
+    :rtype: list
+
 
     >>> diff( ['A','B','C'], ['A','D', 'c'])
     ['B', 'C']
+
+    >>> diff( ['A','B','C'], 'B')
+    ['A', 'C']
 
     >>> diff( ['A','B','C'], ['A','D', 'c'], ignore_case=True)
     ['B']
 
     """
+    list1 = to_list(list1)
+    list2 = to_list(list2)
     return [entry for entry in list1 if not is_member(entry, list2, ignore_case)]
 
 
-def union(list1, list2, ignore_case=False):
+def union(list1, list2):
     """
-    Adds to list
+    Adds two list
 
-    :param list1:
-    :param list2:
-    :return:
+    :type list1: list or str
+    :param list1: first list
+    :type list2: list or str
+    :param list2: second list
+    :return: new list with all elements from both list1 and list2
+    :rtype: list
 
     >>> union( ['A','B','C'], ['A','D','c'])
-    ['A', 'B', 'C', 'D', 'c']
+    ['A', 'B', 'C', 'A', 'D', 'c']
 
-    >>> union( ['A','B','C'], ['A','D','c'], ignore_case=True)
-    ['A', 'B', 'C', 'D']
+    >>> union( 'Hello', 'World')
+    ['Hello', 'World']
 
     """
-    final_list = unique(list1 + list2, ignore_case)
+    final_list = to_list(list1) + to_list(list2)
     return final_list
 
 
 def intersection(list1, list2, ignore_case=False):
     """
+    Intersection of the two given list's is a list which consists of all the elements which are
+    common to both list1 and list2.
 
-    :param list1:
-    :param list2:
-    :param ignore_case:
-    :return:
+    :type list1: list or str
+    :param list1: first list
+    :type list2: list or str
+    :param list2: second list
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: list with common elements
+    :rtype: list
 
     >>> intersection( ['A','B','C'], ['A','D', 'c'])
     ['A']
 
     >>> intersection( ['A','B','C'], ['A','D', 'c'], ignore_case=True)
     ['A', 'C']
+
+    >>> intersection("Der Fluß", "DER fluss", ignore_case=True)
+    ['Der Fluß']
+
     """
+    list1 = to_list(list1)
+    list2 = to_list(list2)
     return [entry for entry in list1 if is_member(entry, list2, ignore_case)]
 
 
+# TODO
 # https://docs.python.org/3/library/fnmatch.html
 def like(string, pattern, ignore_case=False):
     """
@@ -787,6 +852,7 @@ def like(string, pattern, ignore_case=False):
     return fnmatch.fnmatchcase(string, pattern)
 
 
+# TODO
 def sort(source_list, ignore_case=False):
     """
 
