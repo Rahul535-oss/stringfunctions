@@ -25,11 +25,11 @@ Assertion
    str_util.is_list
    str_util.is_empty
    str_util.is_member
+   str_util.is_equal
    str_util.contains
    str_util.contains_all
    str_util.compare
    str_util.like
-
 
 Modify
 ------
