@@ -7,8 +7,8 @@ String functions for Python 3, inspired by similar Lotus Domino @functions
 Features
 
 * Powerful functions to work with both strings and list of strings
-* Fully documented: https://str_util.readthedocs.io
-* 100% coverage
+* Fully documented: https://stringfunctions.readthedocs.io
+* 98% coverage
 * MIT License, source code: https://github.com/majkilde/stringfunctions
 
 
@@ -19,7 +19,7 @@ Install the latest release from `PyPI <https://pypi.org/project/str_utils/>`_:
 
 .. code-block:: sh
 
-    pip install stringutils
+    pip install str_util
 
 Usage
 -----
