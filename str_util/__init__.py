@@ -633,22 +633,25 @@ def word(value, number, separator=None):
 def compare(string1, string2, ignore_case=False):
     """
     Compares two strings
-    :param string1:
-    :param string2:
-    :param ignore_case:
+
+    :param str string1: first string
+    :param str string2: second string
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
     :return:
+        * string1 is less than string2: return	  -1
+        * string1 equals string2: return	   0
+        * string1 is greater than string2: return	   1
 
-    string1 is less than string2: return	  -1
-    string1 equals string2: return	   0
-    string1 is greater than string2: return	   1
+    :rtype: int
 
-    >>> compare( "Jakob", "jakob")
-    -1
+    Compare two strings. Banana comes after Apple in the alphabeth and therefor :func:`compare` return 1 (for greater)
 
     >>> compare( 'Banana','Apple')
     1
 
-    >>> compare( "Jakob", "jakob", ignore_case=True)
+    These two strings are equal when ignore_case is true
+
+    >>> compare( "Der Fluß", "DER fluss", ignore_case=True)
     0
 
     """
