@@ -702,17 +702,56 @@ def compare(string1, string2, ignore_case=False):
     return 0
 
 
-# TODO
+def _make_equal_length(list1, list2):
+    """
+    Returns two new lists, where len(list1)=length(list2)
+    If a list is too short, then the last element is repeated until the length matches the other string
+
+    :param list1: First list
+    :param list2: Second list
+    :return: tuple with the two new list's (list1, list2)
+    :rtype: (list, list)
+
+    >>> _make_equal_length( 'string', ['value1', 'value2'])
+    (['string', 'string'], ['value1', 'value2'])
+    """
+    list1 = to_list(list1)
+    list2 = to_list(list2)
+
+    while len(list1) < len(list2):
+        list1.append(list1[-1])
+
+    while len(list2) < len(list1):
+        list2.append(list1[-1])
+
+    return list1, list2
+
+
 def replace(source, from_str, to_str, ignore_case=False):
     """
-    Performs a find-and-replace operation on a text list.
+    Performs a search-and-replace operation on a list.
+
+    :type source: list or str
+    :param source: The list whose values you want to replace
+    :param str from_str: Value to search for
+    :param str to_str: Value to replace with
+
+    :param boolean ignore_case: Optional. Specify true to ignore case (Default False)
+    :return: new list with replaced values
+    :rtype: list
+
+    Replace Apple with Microsoft
 
     >>> replace( ['Lemon','Apple','Orange'], 'Apple','Microsoft')
     ['Lemon', 'Microsoft', 'Orange']
 
-    """
+    >>> replace( ['red','yellow','blue', 'Yellow'], 'YELLOW', 'green', ignore_case=True)
+    ['red', 'green', 'blue', 'green']
 
-    return [to_str if entry == from_str else entry for entry in source]
+    """
+    source = to_list(source)
+
+    return [to_str if is_equal(entry, from_str, ignore_case) else entry for entry in source]
 
 
 # TODO
