@@ -65,9 +65,10 @@ List operations
 
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :hidden:
+    :glob:
 
+    source/*
 
 Indices and tables
 ==================
