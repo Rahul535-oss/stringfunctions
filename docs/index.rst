@@ -68,11 +68,5 @@ List operations
     :hidden:
     :glob:
 
-    source/*
+    *
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
