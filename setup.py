@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="str_util",
-    version="0.1.2",
+    version="0.1.3",
     author="Jakob Majkilde",
     author_email="jakob@majkilde.dk",
     description="String functions for Python 3",
