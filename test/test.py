@@ -64,6 +64,9 @@ class TestStrUtil(unittest.TestCase):
         self.assertEqual(str_util.replace_substring('c:\\temp', '\\', '/'), "c:/temp")
         self.assertEqual(str_util.replace_substring('c:/temp/*.*', '/', '\\'), "c:\\temp\\*.*")
 
+    def test_word(self):
+        self.assertEqual(str_util.word('a b c', 4), '')
+
     def test_doctest(self):
         suite = unittest.TestSuite()
         suite.addTest(doctest.DocTestSuite("str_util"))
