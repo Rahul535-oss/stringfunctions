@@ -632,7 +632,7 @@ def word(value, number, separator=None):
         return [word(entry, number, separator) for entry in value]
     tokens = value.split(separator)
     index = number - 1 if number > 0 else number
-    if index > len(tokens):
+    if index >= len(tokens):
         return ''
     return tokens[index]
 
